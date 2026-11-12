@@ -8,7 +8,7 @@ on:
 
 jobs:
   oracle-graalvm:
-    name: Oracle GraalVM 25.0.4 (local native-image)
+    name: Oracle GraalVM 25.0.4
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -30,7 +30,7 @@ jobs:
         run: ./target/*-runner
 
   mandrel:
-    name: Mandrel 25.0.4 (local native-image)
+    name: Mandrel 25.0.4
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
