@@ -1,0 +1,47 @@
+name: Native build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  oracle-graalvm:
+    name: Oracle GraalVM 25.0.4 (local native-image)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Oracle GraalVM for JDK 25
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show the GraalVM version
+        run: native-image --version
+
+      - name: Build the native executable
+        run: ./mvnw -B -ntp clean package -Dnative
+
+      - name: Run the native executable
+        run: ./target/*-runner
+
+  mandrel-container:
+    name: Mandrel builder image (container build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Build the native executable
+        run: ./mvnw -B -ntp clean package -Dnative -Dquarkus.native.container-build=true
+
+      - name: Run the native executable
+        run: ./target/*-runner
