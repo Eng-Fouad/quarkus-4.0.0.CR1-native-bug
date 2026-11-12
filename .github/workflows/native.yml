@@ -1,0 +1,53 @@
+name: Native build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  oracle-graalvm:
+    name: Oracle GraalVM 25.0.4
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Oracle GraalVM for JDK 25
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show the GraalVM version
+        run: native-image --version
+
+      - name: Build the native executable
+        run: ./mvnw -B -ntp clean package -Dnative
+
+      - name: Run the native executable
+        run: ./target/*-runner
+
+  mandrel:
+    name: Mandrel 25.0.4
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Mandrel 25.0.4 (JDK 25)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '25'
+          distribution: 'mandrel'
+          version: 'mandrel-25.0.4.0-Final'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show the GraalVM version
+        run: native-image --version
+
+      - name: Build the native executable
+        run: ./mvnw -B -ntp clean package -Dnative
+
+      - name: Run the native executable
+        run: ./target/*-runner
