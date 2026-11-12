@@ -29,20 +29,25 @@ jobs:
       - name: Run the native executable
         run: ./target/*-runner
 
-  mandrel-container:
-    name: Mandrel builder image (container build)
+  mandrel:
+    name: Mandrel 25.0.4 (local native-image)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
-      - name: Set up JDK 25
-        uses: actions/setup-java@v5
+      - name: Set up Mandrel 25.0.4 (JDK 25)
+        uses: graalvm/setup-graalvm@v1
         with:
           java-version: '25'
-          distribution: 'temurin'
+          distribution: 'mandrel'
+          version: 'mandrel-25.0.4.0-Final'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show the GraalVM version
+        run: native-image --version
 
       - name: Build the native executable
-        run: ./mvnw -B -ntp clean package -Dnative -Dquarkus.native.container-build=true
+        run: ./mvnw -B -ntp clean package -Dnative
 
       - name: Run the native executable
         run: ./target/*-runner

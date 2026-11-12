@@ -20,9 +20,9 @@ With Oracle GraalVM 25.0.4 as `GRAALVM_HOME` (or `JAVA_HOME`):
 ./mvnw clean package -Dnative -Dquarkus.version=4.0.0.CR1
 ```
 
-The [Native build](.github/workflows/native.yml) workflow runs two jobs:
+The [Native build](.github/workflows/native.yml) workflow runs two jobs, both with a local `native-image`:
 
 | Job | Native image builder | Quarkus 4.0.0.Beta3 | Quarkus 4.0.0.CR1 |
 |---|---|---|---|
 | `oracle-graalvm` | Oracle GraalVM 25.0.4 (`graalvm/setup-graalvm`, `distribution: graalvm`) | works | fails |
-| `mandrel-container` | Mandrel builder image (`-Dquarkus.native.container-build=true`) | works | works |
+| `mandrel` | Mandrel 25.0.4.0-Final (`graalvm/setup-graalvm`, `distribution: mandrel`) | works | works |
